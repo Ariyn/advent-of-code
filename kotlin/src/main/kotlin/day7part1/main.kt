@@ -31,144 +31,182 @@ val exampleLines = ("\$ cd /\n" +
         "5626152 d.ext\n" +
         "7214296 k").split("\n")
 
-data class File(
-    val name: String,
-    val size: Int,
-    val parent: File?,
-    val isDirectory: Boolean = false,
+class Directory(name: String) : File(name, 0) {
+    constructor(name: String, parent: Directory) : this(name) {
+        this.parent = parent
+    }
+
     val files: MutableList<File> = mutableListOf()
-) {
-    companion object {
-        fun parse(l: String, parent: File): File {
-            val tokens = l.split(" ")
-            return File(tokens[1], tokens[0].toInt(), parent)
-        }
+
+    fun size(): Int = files.sumOf {
+        if (it is Directory) it.size() else it.size
     }
 
-    fun size(): Int {
-        var s = this.size
-        if (this.isDirectory) {
-            s += this.files.sumOf { it.size() }
-        }
-
-        return s
-    }
-
-    override fun toString(): String {
-        val fileType = if (this.isDirectory) "dir" else "file, size=${this.size}"
-        return "${this.name} (${fileType})"
-    }
+    override fun toString(): String = "${this.name} (dir)"
 
     fun printDirectoryRecursive(indent: Int = 0) {
         val prefix = " ".repeat(indent)
 
         println("${prefix}-${this}")
 
-        this.files.forEach { it.printDirectoryRecursive(indent + 1) }
+        this.files.forEach { it ->
+            if (it is Directory) {
+                it.printDirectoryRecursive(indent + 1)
+            } else {
+                println("${" ".repeat(indent + 1)}-${it}")
+            }
+        }
     }
 
     fun contains(name: String): Boolean =
-        this.files.map { it.name }.contains(name)
+            this.files.map { it.name }.contains(name)
 
+    fun contains(f: File): Boolean =
+            this.files.contains(f)
 
-    fun getDirectory(name: String): File? =
-        if (this.contains(name)) {
-            this.files.first { it.name == name }
-        } else {
-            null
-        }
+    fun getDirectory(name: String): Directory? =
+            if (contains(name)) {
+                val sameNameFile = files.first { it.name == name }
+
+                if (sameNameFile is Directory) sameNameFile else null
+            } else {
+                null
+            }
 }
 
-fun NewFile(name: String, size: Int, parent: File): File {
-    return File(name, size, parent)
-}
+open class File(
+        val name: String,
+        val size: Int,
+) {
+    var parent: File? = null
 
-fun NewDirectory(name: String, parent: File?): File {
-    return File(name, 0, isDirectory = true, parent = parent)
+    constructor(name: String, size: Int, parent: File) : this(name, size) {
+        this.parent = parent
+    }
+
+//    companion object {
+//        fun parse(l: String, parent: File): File {
+//            val tokens = l.split(" ")
+//            return File(tokens[1], tokens[0].toInt(), parent)
+//        }
+//    }
+
+    override fun toString(): String {
+        return "$name (file, size=${size})"
+    }
 }
 
 data class Command(
-    val command: String,
-    val target: String,
-)
+        val command: String,
+        val target: String,
+) {
+    companion object {
+        fun parse(l: String): Command? {
+            if (!l.startsWith("$")) {
+                return null
+            }
 
-fun parseCommand(command: String): Command {
-    val tokens = command.split(" ")
-    if (tokens[1] == "cd") {
-        return Command(tokens[1], tokens[2])
+            val tokens = l.split(" ")
+            if (tokens[1] == "cd") {
+                return Command(tokens[1], tokens[2])
+            }
+
+            return Command(tokens[1], "")
+        }
+    }
+}
+
+data class ListResult(
+        var type: String,
+        var size: Int,
+        var name: String,
+) {
+    companion object {
+        fun parse(l: String): ListResult {
+            val tokens = l.split(" ")
+            if (tokens[0] == "dir") {
+                return ListResult("Directory", 0, tokens[1])
+            }
+
+            return ListResult("File", tokens[0].toInt(), tokens[1])
+        }
+    }
+}
+
+class Parser {
+    val rootDirectory = Directory("/")
+    private var isListingFiles = false
+    private var currentDirectory = rootDirectory
+    val entireDirectories = mutableListOf<Directory>()
+    private var lines = listOf<String>()
+
+    constructor(lines: List<String>) {
+        rootDirectory.parent = rootDirectory
+        this.lines = lines
     }
 
-    return Command(tokens[1], "")
+    fun parse() {
+        for (l in lines) {
+            parseLine(l)
+        }
+    }
+
+    fun parseLine(l: String) {
+        val cmd = Command.parse(l)
+        cmd?.let {
+            isListingFiles = false
+
+            when (cmd.command to cmd.target) {
+                "cd" to "/" -> currentDirectory = rootDirectory
+                "cd" to ".." -> currentDirectory = currentDirectory.parent as Directory // TODO: null pointer error??
+                "ls" to "" -> isListingFiles = true
+                else -> {
+                    currentDirectory =
+                            if (currentDirectory.contains(cmd.target)) {
+                                currentDirectory.getDirectory(cmd.target)!!
+                            } else {
+                                val nextDirectory = Directory(cmd.target, currentDirectory)
+
+                                entireDirectories.add(nextDirectory)
+                                currentDirectory.files.add(nextDirectory)
+
+                                nextDirectory
+                            }
+                }
+            }
+        }
+
+        cmd ?: let {
+            if (isListingFiles) {
+                val lr = ListResult.parse(l)
+                if (!currentDirectory.contains(lr.name)) {
+                    if (lr.type == "File") {
+                        val f = File(lr.name, lr.size)
+                        currentDirectory.files.add(f)
+                    } else {
+                        val d = Directory(lr.name, currentDirectory)
+                        currentDirectory.files.add(d)
+                        entireDirectories.add(d)
+                    }
+                }
+            }
+        }
+    }
 }
 
 fun main(args: Array<String>) {
     val lines = readInputLines(args)
-    val rootDirectory = NewDirectory("/", null)
+//    val lines = exampleLines
 
-    var currentDirectory = rootDirectory
-    val entireDirectories = mutableListOf(rootDirectory)
-    var isListingFiles = false
+    val parser = Parser(lines)
+    parser.parse()
 
-    for (l in lines) {
-        when {
-            l.startsWith("$") -> {
-                isListingFiles = false
-                val cmd = parseCommand(l)
-                when (cmd.command) {
-                    "cd" -> {
-                        when (cmd.target) {
-                            "/" -> {
-                                currentDirectory = rootDirectory
-                            }
-
-                            ".." -> {
-                                currentDirectory = currentDirectory.parent!!
-                            }
-
-                            else -> {
-                                val name = cmd.target
-                                var nextDirectory: File?
-
-                                if (currentDirectory.contains(name)) {
-                                    nextDirectory = currentDirectory.getDirectory(name)
-                                } else {
-                                    nextDirectory = NewDirectory(cmd.target, parent = currentDirectory)
-                                    entireDirectories.add(nextDirectory)
-
-                                    currentDirectory.files.add(nextDirectory)
-                                }
-
-                                currentDirectory = nextDirectory!!
-                            }
-                        }
-                    }
-
-                    "ls" -> isListingFiles = true
-                }
-            }
-
-            isListingFiles -> {
-                if (l.startsWith("dir")) {
-                    val (_, name) = l.split(" ")
-                    val nd = NewDirectory(name, currentDirectory)
-                    currentDirectory.files.add(nd)
-                    entireDirectories.add(nd)
-                } else {
-                    val f = File.parse(l, currentDirectory)
-                    if (!currentDirectory.contains(f.name)) {
-                        currentDirectory.files.add(f)
-                    }
-                }
-            }
-        }
-    }
-
-    rootDirectory.printDirectoryRecursive()
+    parser.rootDirectory.printDirectoryRecursive()
 
     val directorySizes =
-        entireDirectories.map { it.name to it.size() }
-    val filteredDirectories = directorySizes.filter { (_, size) -> size <= maximumSizeOfDirectory }
-    val sum = filteredDirectories.sumOf { (_, size) -> size }
+            parser.entireDirectories.map { it.size() }
+    val filteredDirectories = directorySizes.filter { size -> size <= maximumSizeOfDirectory }
+    val sum = filteredDirectories.sum()
 
     println(sum)
 }
