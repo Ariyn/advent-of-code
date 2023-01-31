@@ -80,16 +80,5 @@ fun main(args: Array<String>) {
     }
 
     val visibleTrees = trees.trees.map { (loc, t) -> Pair(loc, trees.isVisible(t)) }.toMap()
-//    visibleTrees.forEach {
-//        println("${it.first}, ${it.second}")
-//    }
     println(visibleTrees.count { (_, v) -> v })
-
-//    for (y in 0 until lines.size) {
-//        for (x in 0 until lines[0].length) {
-//            val loc = Pair(x, y)
-//            print("${visibleTrees[loc].toString()[0]} ")
-//        }
-//        println()
-//    }
 }
