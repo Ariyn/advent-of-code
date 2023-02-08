@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1197e7f8-5f91-47ac-8ff7-bc0ffb9b7d11" name="Changes" comment="" />
+    <list default="true" id="1197e7f8-5f91-47ac-8ff7-bc0ffb9b7d11" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../runbook/create kotlin new day.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../runbook/create kotlin new day.ipynb" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -58,11 +60,20 @@
       <recent name="D:\Library\Documents\advent-of-code\kotlin\src\main\kotlin" />
     </key>
   </component>
-  <component name="RunManager" selected="Kotlin.day 9 part 2">
+  <component name="RunManager" selected="Kotlin.day 10 part 1">
     <configuration name="day 1" type="JetRunConfigurationType">
       <option name="MAIN_CLASS_NAME" value="day1.MainKt" />
       <module name="kotlin.main" />
       <option name="PROGRAM_PARAMETERS" value="D:\Library\Documents\advent-of-code\inputs\day1.txt" />
+      <shortenClasspath name="NONE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="day 10 part 1" type="JetRunConfigurationType" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="day10part1.MainKt" />
+      <module name="kotlin.main" />
+      <option name="PROGRAM_PARAMETERS" value="D:\Library\Documents\advent-of-code\inputs\day10.txt" />
       <shortenClasspath name="NONE" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -167,7 +178,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="day 9 part 2" type="JetRunConfigurationType" temporary="true">
+    <configuration name="day 9 part 2" type="JetRunConfigurationType">
       <option name="MAIN_CLASS_NAME" value="day9part2.MainKt" />
       <module name="kotlin.main" />
       <option name="PROGRAM_PARAMETERS" value="D:\Library\Documents\advent-of-code\inputs\day9.txt" />
@@ -190,10 +201,11 @@
       <item itemvalue="Kotlin.day 6 part 2" />
       <item itemvalue="Kotlin.day 7 part 1" />
       <item itemvalue="Kotlin.day 9 part 2" />
+      <item itemvalue="Kotlin.day 10 part 1" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Kotlin.day 9 part 2" />
+        <item itemvalue="Kotlin.day 10 part 1" />
       </list>
     </recent_temporary>
   </component>
@@ -215,6 +227,11 @@
           <url>file://$PROJECT_DIR$/src/main/kotlin/day9part2/main.kt</url>
           <line>144</line>
           <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/src/main/kotlin/day10part1/main.kt</url>
+          <line>224</line>
+          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
