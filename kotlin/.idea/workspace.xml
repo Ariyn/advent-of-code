@@ -60,7 +60,7 @@
       <recent name="D:\Library\Documents\advent-of-code\kotlin\src\main\kotlin" />
     </key>
   </component>
-  <component name="RunManager" selected="Kotlin.day 10 part 1">
+  <component name="RunManager" selected="Kotlin.day 10 part 2">
     <configuration name="day 1" type="JetRunConfigurationType">
       <option name="MAIN_CLASS_NAME" value="day1.MainKt" />
       <module name="kotlin.main" />
@@ -70,8 +70,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="day 10 part 1" type="JetRunConfigurationType" temporary="true">
+    <configuration name="day 10 part 1" type="JetRunConfigurationType">
       <option name="MAIN_CLASS_NAME" value="day10part1.MainKt" />
+      <module name="kotlin.main" />
+      <option name="PROGRAM_PARAMETERS" value="D:\Library\Documents\advent-of-code\inputs\day10.txt" />
+      <shortenClasspath name="NONE" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="day 10 part 2" type="JetRunConfigurationType">
+      <option name="MAIN_CLASS_NAME" value="day10part2.MainKt" />
       <module name="kotlin.main" />
       <option name="PROGRAM_PARAMETERS" value="D:\Library\Documents\advent-of-code\inputs\day10.txt" />
       <shortenClasspath name="NONE" />
@@ -202,12 +211,8 @@
       <item itemvalue="Kotlin.day 7 part 1" />
       <item itemvalue="Kotlin.day 9 part 2" />
       <item itemvalue="Kotlin.day 10 part 1" />
+      <item itemvalue="Kotlin.day 10 part 2" />
     </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Kotlin.day 10 part 1" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -227,11 +232,6 @@
           <url>file://$PROJECT_DIR$/src/main/kotlin/day9part2/main.kt</url>
           <line>144</line>
           <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/day10part1/main.kt</url>
-          <line>224</line>
-          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
